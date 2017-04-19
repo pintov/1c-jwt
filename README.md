@@ -1,14 +1,15 @@
-1C JWT
+1C HMAC & JWT
 =====
 
-This is a pure 1C implementation of `RFC 7519 <https://tools.ietf.org/html/rfc7519>`.
+This is a pure 1C implementation of RFC 2104 <https://www.ietf.org/rfc/rfc2104.txt> and RFC 7519 <https://tools.ietf.org/html/rfc7519>
 
 Limitations
 -----------
 
 This implementation works only on 1C:Enterprise platform version 8.3.10.2168 or above.
 The platform you may download here: <https://1c-dn.com/user/updates/1c_enterprise_platform_training_version/>
-Supported algorithm HS256 only.
+For JWT supported algorithm HS256 only.
+HMAC function supports algorithms: MD5, SHA1, SHA256
 
 Installing
 ----------
@@ -21,6 +22,16 @@ Usage
 -----
 
 ```bsl
+	
+	// HMAC
+	SecretKey = "key";
+	StringToSign = "The quick brown fox jumps over the lazy dog";
+	Signature = HMAC(
+		GetBinaryDataFromString(SecretKey),
+		GetBinaryDataFromString(StringToSign),
+		HashFunction.SHA256);
+
+	// JWT
 	SecretKey = "secret";
 	Payload = New Structure;
 	Payload.Insert("sub", "1234567890");
