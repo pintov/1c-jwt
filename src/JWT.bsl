@@ -105,14 +105,18 @@ Function Base64UrlDecode(Val input)
 	
 EndFunction
 
-Function ComposeJSON(Obj)
+Function ComposeJSON(Obj, LineBreak = Undefined) Export
 
 	If Not ValueIsFilled(Obj) Then
-		Return Undefined;
+		Return "";
+	EndIf;
+	
+	If LineBreak = Undefined Then
+		LineBreak = JSONLineBreak.None;
 	EndIf;
 	
 	JSONWriter = New JSONWriter;
-	Settings = New JSONWriterSettings(JSONLineBreak.None);
+	Settings = New JSONWriterSettings(LineBreak);
 	JSONWriter.SetString(Settings);
 	WriteJSON(JSONWriter, Obj);
 	Return JSONWriter.Close();

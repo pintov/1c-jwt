@@ -20,7 +20,7 @@ Put modules into the 1C application.
 Usage
 -----
 
-```
+```bsl
 	SecretKey = "secret";
 	Payload = New Structure;
 	Payload.Insert("sub", "1234567890");

@@ -47,7 +47,9 @@ Function BinLeft(Val BinaryData, Val CountOfBytes)
 	DataWriter = New DataWriter(MemoryStream);
 	
 	Buffer = DataReader.ReadIntoBinaryDataBuffer(CountOfBytes);
-	DataWriter.WriteBinaryDataBuffer(Buffer);
+	If Buffer.Size <> 0 Then
+		DataWriter.WriteBinaryDataBuffer(Buffer);
+	EndIf;
 	
 	Return MemoryStream.CloseAndGetBinaryData();
 	
@@ -94,15 +96,16 @@ Function BinBitwiseXOR(Val BinaryData1, Val BinaryData2)
 		DataWriter.WriteBinaryDataBuffer(Buffer2);
 	EndIf;
 	
-	res = MemoryStream.CloseAndGetBinaryData();
-	Return res;
+	Return MemoryStream.CloseAndGetBinaryData();
 
 EndFunction
 
 Function Hash(Val Value, Val HashFunc)
+
 	DataHashing = New DataHashing(HashFunc);
 	DataHashing.Append(Value);
 	Return DataHashing.HashSum;
+	
 EndFunction
 
 Function BinConcat(Val BinaryData1, Val BinaryData2)
@@ -116,10 +119,14 @@ Function BinConcat(Val BinaryData1, Val BinaryData2)
 	Buffer1 = DataReader1.ReadIntoBinaryDataBuffer();
 	Buffer2 = DataReader2.ReadIntoBinaryDataBuffer();
 	
-	DataWriter.WriteBinaryDataBuffer(Buffer1);
-	DataWriter.WriteBinaryDataBuffer(Buffer2);
+	If Buffer1.Size <> 0 Then
+		DataWriter.WriteBinaryDataBuffer(Buffer1);
+	EndIf;
 	
-	res = MemoryStream.CloseAndGetBinaryData();
-	Return res;
+	If Buffer2.Size <> 0 Then
+		DataWriter.WriteBinaryDataBuffer(Buffer2);
+	EndIf;
+	
+	Return MemoryStream.CloseAndGetBinaryData();
 
 EndFunction
