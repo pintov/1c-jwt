@@ -26,7 +26,7 @@ Usage
 	// HMAC
 	SecretKey = "key";
 	StringToSign = "The quick brown fox jumps over the lazy dog";
-	Signature = HMAC(
+	Signature = Cryptography.HMAC(
 		GetBinaryDataFromString(SecretKey),
 		GetBinaryDataFromString(StringToSign),
 		HashFunction.SHA256);

@@ -1,5 +1,6 @@
 
 // Computes a Hash-based Message Authentication Code (HMAC)
+// RFC 2104 https://www.ietf.org/rfc/rfc2104.txt
 //
 // Parameters:
 //  Key			- BinaryData	- the key to use in the hash algorithm
@@ -9,20 +10,20 @@
 // Returns:
 //  BinaryData - The computed hash code
 //
+
 Function HMAC(Val SecretKey, Val Message, Val HashFunc) Export
 	
-	If HashFunc = HashFunction.MD5 Then
-		BlSz = 16;
-	ElsIf HashFunc = HashFunction.SHA1 Then
-		BlSz = 20;
-	ElsIf HashFunc = HashFunction.SHA256 Then
-		BlSz = 64;
-	Else
-		Raise "HMAC: unsupported hash function: " + HashFunc;
+	CheckHashFuncIsSupported(HashFunc);
+	
+	BlSz = 64;
+	
+	If SecretKey.Size() > BlSz Then
+		SecretKey = Hash(SecretKey, HashFunc);
 	EndIf;
 	
 	EmptyBin = GetBinaryDataFromString("");
-    SecretKey = BinLeft(SecretKey, BlSz);
+	SecretKey = BinLeft(SecretKey, BlSz);
+	
 	Ê0 = BinRightPad(SecretKey, BlSz, "0x00");
 	
 	ipad = BinRightPad(EmptyBin, BlSz, "0x36");
@@ -36,8 +37,17 @@ Function HMAC(Val SecretKey, Val Message, Val HashFunc) Export
 	res = Hash(k_opad_Hash, HashFunc);
 	
 	Return res;
-    
+
 EndFunction
+
+
+Procedure CheckHashFuncIsSupported(HashFunc)
+
+	If HashFunc <> HashFunction.MD5 And	HashFunc <> HashFunction.SHA1 And HashFunc <> HashFunction.SHA256 Then
+		Raise "HMAC: unsupported hash function: " + HashFunc;
+	EndIf;
+	
+EndProcedure
 
 Function BinLeft(Val BinaryData, Val CountOfBytes)
 	
@@ -47,9 +57,7 @@ Function BinLeft(Val BinaryData, Val CountOfBytes)
 	DataWriter = New DataWriter(MemoryStream);
 	
 	Buffer = DataReader.ReadIntoBinaryDataBuffer(CountOfBytes);
-	If Buffer.Size <> 0 Then
-		DataWriter.WriteBinaryDataBuffer(Buffer);
-	EndIf;
+	DataWriter.WriteBinaryDataBuffer(Buffer);
 	
 	Return MemoryStream.CloseAndGetBinaryData();
 	
@@ -96,16 +104,15 @@ Function BinBitwiseXOR(Val BinaryData1, Val BinaryData2)
 		DataWriter.WriteBinaryDataBuffer(Buffer2);
 	EndIf;
 	
-	Return MemoryStream.CloseAndGetBinaryData();
+	res = MemoryStream.CloseAndGetBinaryData();
+	Return res;
 
 EndFunction
 
-Function Hash(Val Value, Val HashFunc)
-
+Function Hash(Val Value, Val HashFunc) Export
 	DataHashing = New DataHashing(HashFunc);
 	DataHashing.Append(Value);
 	Return DataHashing.HashSum;
-	
 EndFunction
 
 Function BinConcat(Val BinaryData1, Val BinaryData2)
@@ -119,14 +126,10 @@ Function BinConcat(Val BinaryData1, Val BinaryData2)
 	Buffer1 = DataReader1.ReadIntoBinaryDataBuffer();
 	Buffer2 = DataReader2.ReadIntoBinaryDataBuffer();
 	
-	If Buffer1.Size <> 0 Then
-		DataWriter.WriteBinaryDataBuffer(Buffer1);
-	EndIf;
+	DataWriter.WriteBinaryDataBuffer(Buffer1);
+	DataWriter.WriteBinaryDataBuffer(Buffer2);
 	
-	If Buffer2.Size <> 0 Then
-		DataWriter.WriteBinaryDataBuffer(Buffer2);
-	EndIf;
-	
-	Return MemoryStream.CloseAndGetBinaryData();
+	res = MemoryStream.CloseAndGetBinaryData();
+	Return res;
 
 EndFunction
