@@ -125,7 +125,7 @@ EndFunction
 
 Function ParseJSON(Json) Export
 
-	If ValueIsNotFilled(Json) Then
+	If Not ValueIsFilled(Json) Then
 		Return Undefined;
 	EndIf;
 	
