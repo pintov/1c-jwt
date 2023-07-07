@@ -6,10 +6,13 @@ This is a pure 1C implementation of RFC 2104 <https://www.ietf.org/rfc/rfc2104.t
 Limitations
 -----------
 
-This implementation works only on 1C:Enterprise platform version 8.3.10.2168 or above.
-The platform you may download here: <https://1c-dn.com/user/updates/1c_enterprise_platform_training_version/>
-For JWT supported algorithm HS256 only.
+This implementation works only on 1C:Enterprise platform version 8.3.10.2168 or above.\
+The platform you may download here: <https://1c-dn.com/user/updates/1c_enterprise_platform_training_version/>\
+For JWT supported algorithm HS256 only.\
 HMAC function supports algorithms: MD5, SHA1, SHA256
+
+PS: Since version 8.3.21 you may use AccessToken object to create JWT.\
+https://wonderland.v8.1c.ru/blog/autentifikatsiya-s-pomoshchyu-jwt-tokenov/
 
 Installing
 ----------
